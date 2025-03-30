@@ -164,7 +164,7 @@ class Backtesting:
             row['RSI'] < 50 - rsi_threshold
         ]
         # Allow at most one condition to fail
-        return conditions.count(True) >= len(conditions) - 1
+        return conditions.count(True) >= len(conditions) - 2
 
     def check_short_position_conditions(self, row, acceleration_threshold, quantity_multiply, sma_gap, short_acceleration_threshold, rsi_threshold):
         conditions = [
@@ -224,9 +224,18 @@ class Backtesting:
         trading_data['ATR'] = self.ATR(trading_data, window=14)
         trading_data.dropna(inplace=True)
 
+        # Initialize new columns for position counts.
+        trading_data['Contracts Held'] = 0
+        trading_data['Cumulative Long'] = 0
+        trading_data['Cumulative Short'] = 0
+
         holdings = []              # list of open positions
         total_open_contracts = 0    # global count of contracts currently held
         cumulative_pnl = 0
+
+        # Initialize cumulative counts for entries.
+        cumulative_long_contracts = 0
+        cumulative_short_contracts = 0
 
         trading_data['Asset'] = asset_value
         trading_data['PNL'] = 0
@@ -302,8 +311,10 @@ class Backtesting:
             # -------------------------
             # ENTRY STRATEGY
             # -------------------------
+            # LONG entry
             if self.check_long_position_conditions(row, acceleration_threshold, quantity_multiply, sma_gap, short_acceleration_threshold, rsi_threshold):
                 if holdings and holdings[0]['position_type'] == 'SHORT':
+                    # Do not open long if a short exists
                     pass
                 else:
                     signal_strength = self.calculate_signal_strength_long(row, acceleration_threshold)
@@ -314,22 +325,29 @@ class Backtesting:
                             existing_long = pos
                             break
                     if existing_long:
-                        current_trade_contracts = existing_long['contracts']
-                        additional_desired = desired_contracts
+                        additional_desired = desired_contracts  # additional contracts to add
                         allowed_additional = self.get_allowed_size(additional_desired, total_open_contracts)
-                        if current_trade_contracts + allowed_additional > 10:
-                            allowed_additional = 10 - current_trade_contracts
                         if allowed_additional > 0:
-                            existing_long['contracts'] += allowed_additional
+                            # Update weighted average entry price for long position
+                            total_contracts_before = existing_long['contracts']
+                            total_contracts_after = total_contracts_before + allowed_additional
+                            existing_long['entry_price'] = (
+                                existing_long['entry_price'] * total_contracts_before + cur_price * allowed_additional
+                            ) / total_contracts_after
+                            existing_long['contracts'] = total_contracts_after
                             total_open_contracts += allowed_additional
+                            cumulative_long_contracts += allowed_additional
                     else:
                         allowed = self.get_allowed_size(desired_contracts, total_open_contracts)
                         if allowed > 0:
                             holdings = self.open_position('LONG', cur_price, allowed, holdings)
                             total_open_contracts += allowed
+                            cumulative_long_contracts += allowed
 
+            # SHORT entry
             if self.check_short_position_conditions(row, acceleration_threshold, quantity_multiply, sma_gap, short_acceleration_threshold, rsi_threshold):
                 if holdings and holdings[0]['position_type'] == 'LONG':
+                    # Do not open short if a long exists
                     pass
                 else:
                     signal_strength = self.calculate_signal_strength_short(row, acceleration_threshold)
@@ -340,19 +358,24 @@ class Backtesting:
                             existing_short = pos
                             break
                     if existing_short:
-                        current_trade_contracts = existing_short['contracts']
                         additional_desired = desired_contracts
                         allowed_additional = self.get_allowed_size(additional_desired, total_open_contracts)
-                        if current_trade_contracts + allowed_additional > 10:
-                            allowed_additional = 10 - current_trade_contracts
                         if allowed_additional > 0:
-                            existing_short['contracts'] += allowed_additional
+                            # Update weighted average entry price for short position
+                            total_contracts_before = existing_short['contracts']
+                            total_contracts_after = total_contracts_before + allowed_additional
+                            existing_short['entry_price'] = (
+                                existing_short['entry_price'] * total_contracts_before + cur_price * allowed_additional
+                            ) / total_contracts_after
+                            existing_short['contracts'] = total_contracts_after
                             total_open_contracts += allowed_additional
+                            cumulative_short_contracts += allowed_additional
                     else:
                         allowed = self.get_allowed_size(desired_contracts, total_open_contracts)
                         if allowed > 0:
                             holdings = self.open_position('SHORT', cur_price, allowed, holdings)
                             total_open_contracts += allowed
+                            cumulative_short_contracts += allowed
 
             if holdings:
                 trading_data.at[trading_data.index[i], 'Position'] = holdings[0]['position_type']
@@ -361,10 +384,16 @@ class Backtesting:
                 trading_data.at[trading_data.index[i], 'Position'] = None
                 trading_data.at[trading_data.index[i], 'Entry Price'] = None
 
+            # Update new columns for contract counts.
+            trading_data.at[trading_data.index[i], 'Contracts Held'] = total_open_contracts
+            trading_data.at[trading_data.index[i], 'Cumulative Long'] = cumulative_long_contracts
+            trading_data.at[trading_data.index[i], 'Cumulative Short'] = cumulative_short_contracts
+
         trading_data['Asset'] = asset_history
         trading_data['PNL'] = pnl_history
         trading_data['Cumulative PNL'] = cumulative_pnl_history
 
         return trading_data
 
+# Create an instance of Backtesting
 backtesting = Backtesting()
