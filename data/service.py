@@ -1,14 +1,10 @@
 import psycopg2
 import pandas as pd
 from data.query import MATCHED_VOLUME_QUERY
-# from config import config
 from ssi_fc_data import fc_md_client, model
 from config.config import *
 from config import config_vn30_data as config
 from datetime import datetime
-
-def test():
-    print("Test successful")
 
 class DataService:
     def __init__(self) -> None:
@@ -152,6 +148,15 @@ class DataService:
         data.columns = ['open', 'high', 'low', 'close', 'volume', 'vn30']
         data.dropna(inplace=True)
         return data
+    
+    def get_train_data(self) -> pd.DataFrame:
+        train = pd.read_csv("train.csv")
+        return train
+    
+    def get_test_data(self) -> pd.DataFrame:
+        test = pd.read_csv("test.csv")
+        return test
+
 # Instantiate the DataService.
 data_service = DataService()
 
