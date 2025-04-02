@@ -26,7 +26,7 @@ class Metric:
         plt.grid(True)
         plt.show()
 
-    def calculate_sharpe(self, risk_free_rate=0.0001):
+    def calculate_sharpe(self, risk_free_rate=0.00001):
         """
         Calculate the annualized Sharpe ratio based on the 'PNL' column.
         We assume the PNL column represents daily returns over one year.

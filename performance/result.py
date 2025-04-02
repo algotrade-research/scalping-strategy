@@ -2,7 +2,7 @@ import pandas as pd
 from backtesting.backtesting import Backtesting  # Adjust this import based on your project structure
 
 class BacktestResult:
-    def __init__(self, params, asset_value=10000):
+    def __init__(self, params, asset_value=15000):
         """
         Initialize with the parameters for the backtest and an initial asset value.
         
@@ -25,6 +25,8 @@ class BacktestResult:
             DataFrame: The result of the backtest.
         """
         insample_data = pd.read_csv(file_path)
+        # set the datetime column as index
+        insample_data.index = pd.to_datetime(insample_data['datetime'])
         result = self.backtester.run(insample_data, self.params, self.asset_value)
         return result
 
@@ -39,6 +41,8 @@ class BacktestResult:
             DataFrame: The result of the backtest.
         """
         outsample_data = pd.read_csv(file_path)
+        # set the datetime column as index
+        outsample_data.index = pd.to_datetime(outsample_data['datetime'])
         result = self.backtester.run(outsample_data, self.params, self.asset_value)
         return result
 
