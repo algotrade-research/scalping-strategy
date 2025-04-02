@@ -1,14 +1,9 @@
 
 # Abstract
-This project presents a modular backtesting framework for systematic trading strategies that integrates dynamic position sizing, robust risk management, and parameter optimization. By leveraging technical indicators like ATR, RSI, and SMA, the system generates trading signals and adjusts trade sizes based on market volatility and signal strength. With built-in mechanisms for stop-losses, take-profits, partial exits, and trailing stops, it ensures effective risk management and capital preservation. An Optuna-based optimization module fine-tunes parameters to maximize performance, making the framework a powerful and flexible tool for both research and practical trading applications.
+This project introduces a systematic scalping strategy designed for the VN30F1M futures market. It combines technical indicators—such as SMA, ATR, and RSI—with dynamic position sizing and strong risk management techniques. The system adapts trading size based on market volatility and signal strength to improve performance. Risk is managed using stop-losses, take-profits, partial exits, and trailing stops.
 
 # Introduction
-In today's dynamic financial markets, systematic trading strategies require robust frameworks that adapt to changing conditions while effectively managing risk. This strategy combines technical analysis with dynamic position sizing and rigorous risk management to capture profitable trading opportunities. By leveraging key indicators such as moving averages, ATR, and RSI, the strategy identifies entry and exit signals that reflect market momentum and volatility.
-At its core, the strategy uses dynamic position sizing to adjust the number of contracts based on signal strength and market volatility, ensuring that exposure is aligned with the prevailing risk environment. Integrated risk management tools—such as stop-losses, take-profit levels, partial exits, and trailing stops—help protect capital and lock in gains. Furthermore, the inclusion of an optimization module using Optuna allows for the fine-tuning of strategy parameters, enhancing performance and adaptability across different market conditions.
-Overall, this approach provides a comprehensive and systematic framework that bridges theoretical trading models with real-world applications, offering traders a disciplined method to navigate volatile markets while aiming for consistent performance.
-
-# Backtesting and Optimization System
-This project presents a modular, systematic trading strategy framework that integrates dynamic position sizing, robust risk management, and parameter optimization. The system simulates real-world trading conditions using historical data while adjusting trade sizes based on volatility and signal strength. It also offers comprehensive performance evaluation via various metrics and visualizations.
+In today's dynamic financial markets, systematic trading strategies require robust frameworks that adapt to changing conditions while effectively managing risk. This approach provides a comprehensive and systematic framework that bridges theoretical trading models with real-world applications, offering traders a disciplined method to navigate volatile markets while aiming for consistent performance.
 
 ## Feature
 - [x] Research the 1-minute candle scalping to beat the fee and spread (0.47 in total)
@@ -30,18 +25,11 @@ pip install -r requirements.txt
 
 Many academic studies and industry reports have explored quantitative trading strategies using technical indicators such as moving averages, ATR, and RSI. Prior work shows that dynamic position sizing—where trade sizes adapt to market volatility and signal strength—can improve risk-adjusted returns.
 
-**Prerequisite Reading:**
-- *Quantitative Trading* by Ernest P. Chan
-- *Algorithmic Trading: Winning Strategies and Their Rationale* by Ernie Chan
-- Research on dynamic risk management and position sizing techniques.
-
 ---
 
 ## Trading (Algorithm) Hypotheses
 
 The core hypothesis of this strategy is that combining technical indicators (ATR, RSI, SMA) and momentum signal in VN30F1M data and VN30 data (since VN30 and VN30F1M is highly correlated) with dynamic position sizing can produce consistent, profitable trading signals. By scaling into positions based on volatility and signal strength, and applying robust risk controls (stop-losses, take-profits, partial exits, and trailing stops), the strategy aims to capture market opportunities while limiting downside risk.
-
-*Step 1 of the Nine-Step: Formulate the hypothesis that adaptive position sizing and risk management yield superior performance compared to fixed sizing methods.*
 
 ---
 
@@ -52,6 +40,24 @@ The core hypothesis of this strategy is that combining technical indicators (ATR
 More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products/)
 - Data is sourced from reliable financial providers and stored in CSV format.
 
+## Database Environment
+- Create ```.env``` file and enter your data source configuration with the format
+```
+HOST=<host or ip>
+PORT=<port>
+DATABASE=<database name>
+USER=<username>
+PASSWORD=<password>
+```
+- source the .env file by the command:
+```
+source .env
+```
+- If you don't create ```.env``` file then the code will use data in ```mock``` folder
+- Change the name of the ```stat-example``` folder to ```stat``` or create a new one with the same structure
+- By default the code is run with file mode. To specify the path of the data file:
+  - Create ```mock``` folder
+  - Download and extract the in-sample, out-sample data files and place it in this folder
 
 ## Data Type
 - Time series data
@@ -75,20 +81,12 @@ Data is collected by downloading historical records and, if necessary, using rea
 ## Get In-Sample and Out-Sample data
 Running main.py in the first part of the file
 
-*Step 2 of the Nine-Step: Gather and verify all required data for analysis.*
-
----
-
 ## Data Processing
 
 Raw data is cleaned and pre-processed to calculate essential technical indicators. This step includes:
 - Calculating SMA, ATR, and RSI values.
 - Merging various data sources (price, volume, and index data).
 - Aligning time series data for accurate analysis.
-
-*Step 3 of the Nine-Step: Process the raw data to create inputs for the trading algorithm.*
-
----
 
 # Implementation
 
@@ -106,7 +104,6 @@ The trading strategy is implemented in Python and consists of the following modu
 
 # In-sample Backtesting
 
-## Description
 In-sample backtesting is the process of calibrating and validating the trading strategy using historical data from the training period. This step helps fine-tune the model parameters and assess performance before applying the strategy to new data.  
 *Step 4 of the Nine-Step*
 
@@ -181,9 +178,7 @@ The best parameters is stored in ```optimization/best_params.json``` file
 
 # Out-of-sample Backtesting
 
-## Description
 Out-of-sample backtesting tests the robustness of the trading strategy using data that was not part of the optimization process. This evaluation determines how well the strategy generalizes to new market conditions.  
-*Step 6 of the Nine-Step*
 
 ## Parameters
 - The optimized strategy parameters (from the optimization step)
@@ -202,14 +197,8 @@ python main.py
 ```
 # Conclusion
 
-In conclusion, this project demonstrates that a systematic trading strategy—when coupled with dynamic position sizing and rigorous risk management—can adapt effectively to varying market conditions. The backtesting and optimization process confirms that the strategy not only performs well in historical (in-sample) tests but also generalizes effectively to out-of-sample data, highlighting its potential for practical trading applications.
-
----
+In conclusion, this scalping strategy tackles the challenge of high transaction costs (0.47%), showing strong results in in-sample testing but limited success out-of-sample. While not consistently profitable across all conditions, it still achieved a positive PnL and, more importantly, provided valuable insights. Through this process, I gained a deeper understanding of strategy design, risk management, and the complexities of trading in high-fee environments—paving the way for future improvements.
 
 # References
-
-- Chan, E. P. (2009). *Quantitative Trading: How to Build Your Own Algorithmic Trading Business*. Wiley.
-- Chan, E. (2013). *Algorithmic Trading: Winning Strategies and Their Rationale*. Wiley.
-- Relevant research articles and industry reports on dynamic position sizing, risk management, and algorithmic trading methodologies.
 
 ---
