@@ -59,21 +59,19 @@ class Optimization:
         study.optimize(self.objective, n_trials=self.n_trials)
         return study.best_params
 
-    def save_best_params(self, filepath):
+    def save_best_params(self, best_params, filepath = 'optimization/best_params.json'):
         """
-        Run the optimization and save the best parameters to a JSON file.
+        Save the best parameters to a JSON file.
         
         Parameters:
-            filepath (str): File path to save the best parameters.
-            
-        Returns:
-            dict: The best parameters found.
+            best_params (dict): The best parameters found by Optuna.
+            filepath (str): Path to save the JSON file (default: 'best_params.json').
         """
-        best_params = self.run_optimization()
         with open(filepath, 'w') as f:
-            json.dump(best_params, f)
+            json.dump(best_params, f, indent=4)
         return best_params
-
+    
+        
 # Example usage:
 # optimizer = Optimization(train_data_path='data/train.csv', study_name='sma-vq2', storage='sqlite:///sma.db', n_trials=3000)
 # best_parameters = optimizer.save_best_params('best_params.json')
