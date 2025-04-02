@@ -150,11 +150,15 @@ class DataService:
         return data
     
     def get_train_data(self) -> pd.DataFrame:
-        train = pd.read_csv("train.csv")
+        train = pd.read_csv("data/train.csv")
+        # set datetime as index
+        train.index = pd.to_datetime(train['datetime'])
         return train
     
     def get_test_data(self) -> pd.DataFrame:
-        test = pd.read_csv("test.csv")
+        test = pd.read_csv("data/test.csv")
+        # set datetime as index
+        test.index = pd.to_datetime(test['datetime'])
         return test
 
 # Instantiate the DataService.
