@@ -1,0 +1,6 @@
+pandas
+numpy
+matplotlib
+tqdm
+optuna
+ssi-fc-data
