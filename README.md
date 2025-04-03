@@ -123,7 +123,6 @@ To see the results, run this command with the ```main.py``` file
 ```
 python main.py
 ```
----
 
 # Optimization
 
@@ -198,6 +197,15 @@ python main.py
 # Conclusion
 
 In conclusion, this scalping strategy tackles the challenge of high transaction costs (0.47%), showing strong results in in-sample testing but limited success out-of-sample. While not consistently profitable across all conditions, it still achieved a positive PnL and, more importantly, provided valuable insights. Through this process, I gained a deeper understanding of strategy design, risk management, and the complexities of trading in high-fee environments—paving the way for future improvements.
+
+<center>
+
+|           | Sharpe Ratio |   MMMD  | Win Rate | Total Long Trades | Total Short Trades |
+|-----------|--------------|---------|----------|-------------------|--------------------|
+| In-Sample |    0.109     |  10.65% |  40.96%  |       5959        |        6355        |
+|Out-Sample |    0.132     |  8.09%  |  44.17%  |       1840        |        1455        |
+
+</center>
 
 # References
 
