@@ -105,7 +105,6 @@ The trading strategy is implemented in Python and consists of the following modu
 # In-sample Backtesting
 
 In-sample backtesting is the process of calibrating and validating the trading strategy using historical data from the training period. This step helps fine-tune the model parameters and assess performance before applying the strategy to new data.  
-*Step 4 of the Nine-Step*
 
 ## Parameters
 - Strategy parameters (e.g., SMA window length, momentum lookback, acceleration thresholds, etc.)
@@ -209,4 +208,5 @@ In conclusion, this scalping strategy tackles the challenge of high transaction 
 
 # References
 
+This project did not have References
 ---
