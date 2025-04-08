@@ -1,3 +1,4 @@
+![Static Badge](https://img.shields.io/badge/PLUTUS-verified_50%25-yellow)
 
 # Abstract
 This project introduces a systematic scalping strategy designed for the VN30F1M futures market. It combines technical indicators—such as SMA, ATR, and RSI—with dynamic position sizing and strong risk management techniques. The system adapts trading size based on market volatility and signal strength to improve performance. Risk is managed using stop-losses, take-profits, partial exits, and trailing stops.
