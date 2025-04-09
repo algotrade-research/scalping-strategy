@@ -74,7 +74,10 @@ $$ \frac{Acceleration}{Acceleration Threshold} $$
 ### Adjusted Entry Price:
 
 When multiple orders are placed at different price levels, the entry price and total contracts are recalculated into a single average entry price to simplify strategy tracking and profit-and-loss (PnL) calculations:
-$$ \text{Adjusted_entry_price} = \frac{\text{contracts}(t-1) \cdot P(t-1) + \text{contracts}(t) \cdot P(t)} {\text{contracts}(t-1) + \text{contracts}(t)} $$
+$$
+\mathtt{Adjusted\_entry\_price} = \frac{\mathtt{contracts}(t-1) \cdot P(t-1) + \mathtt{contracts}(t) \cdot P(t)}{\mathtt{contracts}(t-1) + \mathtt{contracts}(t)}
+$$
+
 
 ## Feature
 - [x] Research the 1-minute candle scalping to beat the fee and spread (0.47 in total)
