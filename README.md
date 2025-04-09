@@ -25,7 +25,7 @@ In today's dynamic financial markets, systematic trading strategies require robu
 }
 ```
 $$
-\text{Acceleration} = \mathtt{matchedprice}\_t - \mathtt{matchedprice}\_(t - {momentumlookback})
+\text{Acceleration} = \mathtt{matchedprice}\_t - \mathtt{matchedprice}_(t - {momentumlookback})
 $$
 
 
