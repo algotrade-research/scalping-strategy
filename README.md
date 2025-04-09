@@ -28,22 +28,21 @@ $$
 \text{Acceleration} = \mathtt{matchedprice}\_t - \mathtt{matchedprice}_{t - momentumlookback}
 $$
 
-
 - Defined as the difference between the matched price at time 't' and the matched price at the previous momentum lookback interval. Positive acceleration indicates a genuine price reversal.
 
-- Short Acceleration: Represents acceleration measured over the most recent intervals, verifying immediate past price momentum.
+- **'Short Acceleration'**: Represents acceleration measured over the most recent intervals, verifying immediate past price momentum.
 
-- VN30 Acceleration: VN30F1M is highly correlated with VN30 data so I also use VN30 data as a confirmation of the reversal signal
+- **'VN30 Acceleration'**: VN30F1M is highly correlated with VN30 data so I also use VN30 data as a confirmation of the reversal signal
 
 ![VN30F1M](doc/Figure_1.png)
 
 ![VN30](doc/Figure_2.png)
 
-- Volume: The current trading volume per minute must exceed the historical average volume (Average Quantity) multiplied by a specified optimization factor (quantity_multiply). Increased volume combined with price reversal signals supports entering a long position.
+- **'Volume'**: The current trading volume per minute must exceed the historical average volume **'Average Quantity'** multiplied by a specified optimization factor **'quantity_multiply'**. Increased volume combined with price reversal signals supports entering a long position.
 
-- $$ \frac{Price}{SMA} Ratio $$: The current price relative to its Simple Moving Average (SMA) must be below a threshold (1 - sma_gap), signaling undervaluation.
+- **'Price/SMA Ratio'**: The current price relative to its Simple Moving Average (SMA) must be below a threshold (1 - sma_gap), signaling undervaluation.
 
-- Relative Strength Index (RSI): An RSI value lower than the threshold (50 - rsi_threshold) indicates an oversold condition, thus reinforcing the long position signal. An RSI below 20 strongly suggests an oversold market.
+- **'Relative Strength Index (RSI)'**: An RSI value lower than the threshold (50 - rsi_threshold) indicates an oversold condition, thus reinforcing the long position signal. An RSI below 20 strongly suggests an oversold market.
 
 **Since the strategy is quite complex to matched all the signal, just 4 in 6 condition is needed to entry a position**
 
@@ -56,8 +55,7 @@ With a capital of 1.5 billion VND, the strategy can simultaneously trade up to 4
 
 ### Signal Strength Scoring:
 
-- Signal strength is calculated as:
-$$ \frac{Acceleration}{Acceleration Threshold} $$
+- Signal strength is calculated as: Acceleration/Acceleration Threshold
 
 - Higher values of 'a' suggest a stronger signal, prompting a larger number of contracts to be traded.
 
@@ -74,10 +72,8 @@ $$ \frac{Acceleration}{Acceleration Threshold} $$
 ### Adjusted Entry Price:
 
 When multiple orders are placed at different price levels, the entry price and total contracts are recalculated into a single average entry price to simplify strategy tracking and profit-and-loss (PnL) calculations:
-$$
-\mathtt{Adjusted\_entry\_price} = \frac{\mathtt{contracts}(t-1) \cdot P(t-1) + \mathtt{contracts}(t) \cdot P(t)}{\mathtt{contracts}(t-1) + \mathtt{contracts}(t)}
-$$
 
+![fomula](doc/fomula.png)
 
 ## Feature
 - [x] Research the 1-minute candle scalping to beat the fee and spread (0.47 in total)
@@ -132,7 +128,7 @@ source .env
   - Download and extract the in-sample, out-sample data files and place it in this folder
 
 # Implementation
-Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis
+Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis.
 ## Environment Setup and Replication Steps
 1. **Clone the Repository:**
    ```bash
@@ -151,7 +147,7 @@ The data from 01/01/2023 to 31/12/2023
 ## Data
 - **Input Data:** `data/insample.csv`
 - **Data Period:** For example, January 2023 to December 2023
-- Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis
+
 ## In-sample Backtesting Result
 The in-sample backtesting results are summarized in a performance table and visualized with a cumulative PNL chart.  
 
@@ -168,7 +164,7 @@ python main.py
 
 **It can take 10-15 second per trial, which can make it 5-6 hours for an entire process. Becareful**
 
--**Run the optimization process by**
+Run the optimization process by
 ```
 python optimization.py
 ```
@@ -211,13 +207,13 @@ The best parameters is stored in ```optimization/best_params.json``` file
 ```
 **Cumulative PnL**
 
-![Insample Return](doc/PNL insample.png)
+![Insample Return](doc/PNL_insample.png)
 
 # Out-of-sample Backtesting
 
 **Cumulative PnL**
 
-![Insample Return](doc/PNL outsample.png) 
+![Outsample Return](doc/PNL_outsample.png) 
  
 To see the results, run this command with the ```main.py``` file
 ```
