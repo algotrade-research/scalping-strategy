@@ -25,8 +25,10 @@ In today's dynamic financial markets, systematic trading strategies require robu
 }
 ```
 $$
-\text{Acceleration} = \text{matched\_price}(t) - \text{matched\_price}\left(t - \text{momentum\_lookback}\right)
+\text{Acceleration} = \mathtt{matched\_price}(t) - \mathtt{matched\_price}\bigl(t - \mathtt{momentum\_lookback}\bigr)
 $$
+
+
 - Defined as the difference between the matched price at time 't' and the matched price at the previous momentum lookback interval. Positive acceleration indicates a genuine price reversal.
 
 - Short Acceleration: Represents acceleration measured over the most recent intervals, verifying immediate past price momentum.
