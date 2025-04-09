@@ -54,7 +54,8 @@ With a capital of 1.5 billion VND, the strategy can simultaneously trade up to 4
 
 ### Signal Strength Scoring:
 
-- Signal strength is calculated as: $$ \frac{Acceleration}{Acceleration Threshold} $$
+- Signal strength is calculated as:
+$$ \frac{Acceleration}{Acceleration Threshold} $$
 
 - Higher values of 'a' suggest a stronger signal, prompting a larger number of contracts to be traded.
 
@@ -71,12 +72,7 @@ With a capital of 1.5 billion VND, the strategy can simultaneously trade up to 4
 ### Adjusted Entry Price:
 
 When multiple orders are placed at different price levels, the entry price and total contracts are recalculated into a single average entry price to simplify strategy tracking and profit-and-loss (PnL) calculations:
-$$
-\text{Adjusted_entry_price} 
-= 
-\frac{\text{contracts}(t-1) \cdot P(t-1) + \text{contracts}(t) \cdot P(t)}
-     {\text{contracts}(t-1) + \text{contracts}(t)}
-$$
+$$ \text{Adjusted_entry_price} = \frac{\text{contracts}(t-1) \cdot P(t-1) + \text{contracts}(t) \cdot P(t)} {\text{contracts}(t-1) + \text{contracts}(t)} $$
 
 ## Feature
 - [x] Research the 1-minute candle scalping to beat the fee and spread (0.47 in total)
