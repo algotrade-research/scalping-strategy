@@ -1,10 +1,82 @@
-![Static Badge](https://img.shields.io/badge/PLUTUS-Compliance_Score_55%25-yellow)
 
 # Abstract
-This project introduces a systematic scalping strategy designed for the VN30F1M futures market. It combines technical indicators—such as SMA, ATR, and RSI—with dynamic position sizing and strong risk management techniques. The system adapts trading size based on market volatility and signal strength to improve performance. Risk is managed using stop-losses, take-profits, partial exits, and trailing stops.
+The core hypothesis of this strategy is that combining technical indicators (ATR, RSI, SMA) and momentum signal in VN30F1M data and VN30 data (since VN30 and VN30F1M is highly correlated) with dynamic position sizing can produce consistent, profitable trading signals. By scaling into positions based on volatility and signal strength, and applying robust risk controls (stop-losses, take-profits, partial exits, and trailing stops), the strategy aims to capture market opportunities while limiting downside risk.
 
 # Introduction
 In today's dynamic financial markets, systematic trading strategies require robust frameworks that adapt to changing conditions while effectively managing risk. This approach provides a comprehensive and systematic framework that bridges theoretical trading models with real-world applications, offering traders a disciplined method to navigate volatile markets while aiming for consistent performance.
+
+# Strategy's Key Idea
+- The investment capital allocated for trading derivatives in the Vietnamese market is 1.5 billion VND (45 contracts at a time)
+- VN30F1M in these year is kind of a sideway market so reversion strategy with a reversal momentum indicator is my choice to aim for a strategy with big take profit
+
+## Long position conditions: 
+
+```
+{
+    def check_long_position_conditions(self, row, acceleration_threshold, quantity_multiply, sma_gap, short_acceleration_threshold, rsi_threshold):
+        conditions = [
+            row['Acceleration'] > acceleration_threshold,
+            row['VN30 Acceleration'] > 0,
+            row['volume'] > row['Average Quantity'] * quantity_multiply,
+            row['Price/SMA'] < 1 - sma_gap,
+            row['Short Acceleration'] > short_acceleration_threshold,
+            row['RSI'] < 50 - rsi_threshold
+        ] 
+}
+```
+$$
+\text{Acceleration} = \text{matched\_price}(t) - \text{matched\_price}\left(t - \text{momentum\_lookback}\right)
+$$
+- Defined as the difference between the matched price at time 't' and the matched price at the previous momentum lookback interval. Positive acceleration indicates a genuine price reversal.
+
+- Short Acceleration: Represents acceleration measured over the most recent intervals, verifying immediate past price momentum.
+
+- VN30 Acceleration: VN30F1M is highly correlated with VN30 data so I also use VN30 data as a confirmation of the reversal signal
+
+![VN30F1M](doc/Figure_1.png)
+
+![VN30](doc/Figure_2.png)
+
+- Volume: The current trading volume per minute must exceed the historical average volume (Average Quantity) multiplied by a specified optimization factor (quantity_multiply). Increased volume combined with price reversal signals supports entering a long position.
+
+- $$ \frac{Price}{SMA} Ratio $$: The current price relative to its Simple Moving Average (SMA) must be below a threshold (1 - sma_gap), signaling undervaluation.
+
+- Relative Strength Index (RSI): An RSI value lower than the threshold (50 - rsi_threshold) indicates an oversold condition, thus reinforcing the long position signal. An RSI below 20 strongly suggests an oversold market.
+
+**Since the strategy is quite complex to matched all the signal, just 4 in 6 condition is needed to entry a position**
+
+## Short Position Conditions:
+Short positions are taken under conditions inverse to those for long positions, with a higher take-profit threshold.
+Observationally, downward market trends typically show stronger momentum compared to upward trends, justifying a higher profit expectation from short positions.
+
+## Position Sizing and Contract Management:
+With a capital of 1.5 billion VND, the strategy can simultaneously trade up to 45 contracts. Thus, determining the strength of the trading signal is crucial for optimal contract allocation.
+
+### Signal Strength Scoring:
+
+- Signal strength is calculated as: $$ \frac{Acceleration}{Acceleration Threshold} $$
+
+- Higher values of 'a' suggest a stronger signal, prompting a larger number of contracts to be traded.
+
+- The base number of contracts 'base_contract' is calculated by flooring the value of 'a' and multiplying by 10.
+
+### Volatility Adjustment:
+
+- During periods of high volatility (measured by the standard deviation of matched prices over the last 50 intervals, with each interval representing one minute), the number of contracts traded is reduced to 50% of the 'base_contract'.
+
+- In low-volatility periods, contracts traded are increased to 150% of the 'base_contract'.
+
+- Normal volatility periods warrant trading the exact 'base_contract' amount.
+
+### Adjusted Entry Price:
+
+When multiple orders are placed at different price levels, the entry price and total contracts are recalculated into a single average entry price to simplify strategy tracking and profit-and-loss (PnL) calculations:
+$$
+\text{Adjusted_entry_price} 
+= 
+\frac{\text{contracts}(t-1) \cdot P(t-1) + \text{contracts}(t) \cdot P(t)}
+     {\text{contracts}(t-1) + \text{contracts}(t)}
+$$
 
 ## Feature
 - [x] Research the 1-minute candle scalping to beat the fee and spread (0.47 in total)
@@ -16,32 +88,30 @@ In today's dynamic financial markets, systematic trading strategies require robu
 ---
 
 ## Installation
+
 - Requirement: pip
 - Install the dependencies by:
 ```
 pip install -r requirements.txt
 ```
-
-# Related Work (Background)
-
-Many academic studies and industry reports have explored quantitative trading strategies using technical indicators such as moving averages, ATR, and RSI. Prior work shows that dynamic position sizing—where trade sizes adapt to market volatility and signal strength—can improve risk-adjusted returns.
-
----
-
-## Trading (Algorithm) Hypotheses
-
-The core hypothesis of this strategy is that combining technical indicators (ATR, RSI, SMA) and momentum signal in VN30F1M data and VN30 data (since VN30 and VN30F1M is highly correlated) with dynamic position sizing can produce consistent, profitable trading signals. By scaling into positions based on volatility and signal strength, and applying robust risk controls (stop-losses, take-profits, partial exits, and trailing stops), the strategy aims to capture market opportunities while limiting downside risk.
+- Install ssi fast connect
+```
+cd data/fc-data.py
+pip install -r requirements.txt
+```
 
 ---
 
 # Data
 
 ## Data Source
-- Historical market data including OHLC (Open, High, Low, Close) prices, trading volumes (from Algotrade database), and VN30 index values (from SSI fast connect data API).
+
+- Historical market data of this project from 01/2023 to 04/2024 including OHLC (Open, High, Low, Close) prices, trading volumes (from Algotrade database), and the VN30 index values (from SSI fast connect data API).
 More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products/)
-- Data is sourced from reliable financial providers and stored in CSV format.
+- Data is sourced from reliable financial providers and stored as CSV format in data folder.
 
 ## Database Environment
+
 - Create ```.env``` file and enter your data source configuration with the format
 ```
 HOST=<host or ip>
@@ -60,43 +130,8 @@ source .env
   - Create ```mock``` folder
   - Download and extract the in-sample, out-sample data files and place it in this folder
 
-## Data Type
-- Time series data
-- Price and volume information
-- Computed technical indicators (SMA, ATR, RSI)
-
-## Data Period
-- **In-Sample:** e.g., January 2023 to December 2023
-- **Out-of-Sample:** e.g., January 2024 to April 2024
-
-## How to Get the Input Data?
-- Input data files are available in the `data` directory of the repository.
-- Additional data may be acquired via APIs or direct downloads from financial data providers.
-
-## How to Store the Output Data?
-- Backtest results and performance metrics are stored as CSV files, with filenames indicating whether they are from in-sample or out-of-sample tests.
-
-## Data Collection
-Data is collected by downloading historical records and, if necessary, using real-time API feeds. Pre-processing scripts ensure data is cleaned, aligned, and formatted correctly for subsequent analysis.
-
-## Get In-Sample and Out-Sample data
-Running main.py in the first part of the file
-
-## Data Processing
-
-Raw data is cleaned and pre-processed to calculate essential technical indicators. This step includes:
-- Calculating SMA, ATR, and RSI values.
-- Merging various data sources (price, volume, and index data).
-- Aligning time series data for accurate analysis.
-
 # Implementation
-
-## Brief Implementation Description
-The trading strategy is implemented in Python and consists of the following modules:
-- **Backtesting Engine:** Simulates trade execution, dynamic position management (including partial exits and trailing stops), and performance metric calculation.
-- **Optimization Module:** Uses Optuna for parameter tuning to maximize strategy performance.
-- **Result & Metric Analysis:** Provides visualization and quantitative analysis of performance (e.g., cumulative PNL, Sharpe Ratio, Maximum Drawdown, Win Rate, contract counts).
-
+Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis
 ## Environment Setup and Replication Steps
 1. **Clone the Repository:**
    ```bash
@@ -105,7 +140,7 @@ The trading strategy is implemented in Python and consists of the following modu
 
 # In-sample Backtesting
 
-In-sample backtesting is the process of calibrating and validating the trading strategy using historical data from the training period. This step helps fine-tune the model parameters and assess performance before applying the strategy to new data.  
+The data from 01/01/2023 to 31/12/2023 
 
 ## Parameters
 - Strategy parameters (e.g., SMA window length, momentum lookback, acceleration thresholds, etc.)
@@ -115,7 +150,7 @@ In-sample backtesting is the process of calibrating and validating the trading s
 ## Data
 - **Input Data:** `data/insample.csv`
 - **Data Period:** For example, January 2023 to December 2023
-
+- Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis
 ## In-sample Backtesting Result
 The in-sample backtesting results are summarized in a performance table and visualized with a cumulative PNL chart.  
 
@@ -126,9 +161,16 @@ python main.py
 
 # Optimization
 
-The optimization step involves fine-tuning the trading strategy parameters to maximize performance, measured by cumulative PNL. This step employs advanced hyperparameter tuning techniques to systematically search the parameter space.  
-*Step 5 of the Nine-Step*
+- **Number of Trials:** 10000 
+- **Sampler Seed:** 42  
+- **Study Direction:** Maximize cumulative PNL
 
+**It can take 10-15 second per trial, which can make it 5-6 hours for an entire process. Becareful**
+
+-**Run the optimization process by**
+```
+python optimization.py
+```
 ## Optimization Process / Methods / Library
 - **Library:** [Optuna](https://optuna.org/)
 - **Method:** Tree-structured Parzen Estimator (TPE) sampler
@@ -147,14 +189,7 @@ The optimization step involves fine-tuning the trading strategy parameters to ma
 - RSI window  
 - RSI threshold
 
-## Hyper-parameters of the Optimization Process
-- **Number of Trials:** 10000 
-- **Sampler Seed:** 42  
-- **Study Direction:** Maximize cumulative PNL
-
 ## Optimization Result
-The best parameter set is presented in a summary table with corresponding performance metrics.  
-
 The results is stored in optimization/sma.db
 The best parameters is stored in ```optimization/best_params.json``` file
 ```
@@ -173,23 +208,16 @@ The best parameters is stored in ```optimization/best_params.json``` file
     "rsi_threshold": 39
 }
 ```
----
+**Cumulative PnL**
+
+![Insample Return](doc/PNL insample.png)
 
 # Out-of-sample Backtesting
 
-Out-of-sample backtesting tests the robustness of the trading strategy using data that was not part of the optimization process. This evaluation determines how well the strategy generalizes to new market conditions.  
+**Cumulative PnL**
 
-## Parameters
-- The optimized strategy parameters (from the optimization step)
-- Initial asset value (e.g., 15,000)
-
-## Data
-- **Input Data:** `data/outsample.csv`
-- **Data Period:** For example, January 2024 to April 2024
-
-## Out-of-sample Backtesting Result
-The results include key performance metrics such as cumulative PNL, Sharpe Ratio, Maximum Drawdown, and win rate. These are summarized in tables and visualized in charts.  
-
+![Insample Return](doc/PNL outsample.png) 
+ 
 To see the results, run this command with the ```main.py``` file
 ```
 python main.py
