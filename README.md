@@ -73,7 +73,7 @@ With a capital of 1.5 billion VND, the strategy can simultaneously trade up to 4
 
 When multiple orders are placed at different price levels, the entry price and total contracts are recalculated into a single average entry price to simplify strategy tracking and profit-and-loss (PnL) calculations:
 
-![fomula](doc/fomula.png)
+![formula](doc/formula.png)
 
 ## Feature
 - [x] Research the 1-minute candle scalping to beat the fee and spread (0.47 in total)
