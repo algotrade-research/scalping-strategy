@@ -28,7 +28,7 @@ $$
 \text{Acceleration} = \mathtt{matchedprice}\_t - \mathtt{matchedprice}_{t - momentumlookback}
 $$
 
-- Defined as the difference between the matched price at time 't' and the matched price at the previous momentum lookback interval. Positive acceleration indicates a genuine price reversal.
+- **'Acceleration'**: Defined as the difference between the matched price at time 't' and the matched price at the previous momentum lookback interval. Positive acceleration indicates a genuine price reversal.
 
 - **'Short Acceleration'**: Represents acceleration measured over the most recent intervals, verifying immediate past price momentum.
 
