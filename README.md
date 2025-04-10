@@ -34,10 +34,6 @@ $$
 
 - **'VN30 Acceleration'**: VN30F1M is highly correlated with VN30 data so I also use VN30 data as a confirmation of the reversal signal
 
-![VN30F1M](doc/Figure_1.png)
-
-![VN30](doc/Figure_2.png)
-
 - **'Volume'**: The current trading volume per minute must exceed the historical average volume **'Average Quantity'** multiplied by a specified optimization factor **'quantity_multiply'**. Increased volume combined with price reversal signals supports entering a long position.
 
 - **'Price/SMA Ratio'**: The current price relative to its Simple Moving Average (SMA) must be below a threshold (1 - sma_gap), signaling undervaluation.
