@@ -131,10 +131,9 @@ source .env
 Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis.
 ## Environment Setup and Replication Steps
 1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/yourusername/backtesting-optimization.git
-   cd backtesting-optimization
-
+ ```
+git clone https://github.com/algotrade-research/scalping-strategy.git
+```
 # In-sample Backtesting
 
 The data from 01/01/2023 to 31/12/2023 
