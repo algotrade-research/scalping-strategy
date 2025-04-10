@@ -106,26 +106,6 @@ pip install -r requirements.txt
 More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products/)
 - Data is sourced from reliable financial providers and stored as CSV format in data folder.
 
-## Database Environment
-
-- Create ```.env``` file and enter your data source configuration with the format
-```
-HOST=<host or ip>
-PORT=<port>
-DATABASE=<database name>
-USER=<username>
-PASSWORD=<password>
-```
-- source the .env file by the command:
-```
-source .env
-```
-- If you don't create ```.env``` file then the code will use data in ```mock``` folder
-- Change the name of the ```stat-example``` folder to ```stat``` or create a new one with the same structure
-- By default the code is run with file mode. To specify the path of the data file:
-  - Create ```mock``` folder
-  - Download and extract the in-sample, out-sample data files and place it in this folder
-
 # Implementation
 Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis.
 ## Environment Setup and Replication Steps
