@@ -81,7 +81,10 @@ $$
 - [x] Evaluate backtesting and optimization
 - [ ] Paper trade
 
----
+# Data
+- Historical market data of this project from 01/2023 to 04/2024 including OHLC (Open, High, Low, Close) prices, trading volumes (from Algotrade database), and the VN30 index values (from SSI fast connect data API).
+More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products/)
+- Data is sourced from reliable financial providers and stored as CSV format in data folder.
 
 ## Installation
 
@@ -95,16 +98,6 @@ pip install -r requirements.txt
 cd data/fc-data.py
 pip install -r requirements.txt
 ```
-
----
-
-# Data
-
-## Data Source
-
-- Historical market data of this project from 01/2023 to 04/2024 including OHLC (Open, High, Low, Close) prices, trading volumes (from Algotrade database), and the VN30 index values (from SSI fast connect data API).
-More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products/)
-- Data is sourced from reliable financial providers and stored as CSV format in data folder.
 
 # Implementation
 Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis.
@@ -121,10 +114,6 @@ The data from 01/01/2023 to 31/12/2023
 - Strategy parameters (e.g., SMA window length, momentum lookback, acceleration thresholds, etc.)
 - Risk management settings (e.g., stop-loss, take-profit thresholds)
 - Initial asset value (e.g., 10,000)
-
-## Data
-- **Input Data:** `data/insample.csv`
-- **Data Period:** For example, January 2023 to December 2023
 
 ## In-sample Backtesting Result
 The in-sample backtesting results are summarized in a performance table and visualized with a cumulative PNL chart.  
@@ -187,12 +176,28 @@ The best parameters is stored in ```optimization/best_params.json``` file
 
 ![Insample Return](doc/PNL_insample.png)
 
+| **Metric**            | **In-sample**    | 
+|-----------------------|------------------|
+| Sharpe Ratio          |  0.109           |
+| Maximum Drawdown      | 10.65%           |
+| Win Rate              |  40.96%          |
+| Total Long Trades     |  5959            |
+| Total Short Trades    |   6355           |
+
 # Out-of-sample Backtesting
 
 **Cumulative PnL**
 
 ![Outsample Return](doc/PNL_outsample.png) 
- 
+
+|  **Metric**           | **Out-sample** | 
+|-----------------------|----------------|
+| Sharpe Ratio          |  0.132         |
+| Maximum Drawdown      |  8.09%         |
+| Win Rate              |  44.17%        |
+| Total Long Trades     |    1840        |
+| Total Short Trades    |  1455          |
+
 To see the results, run this command with the ```main.py``` file
 ```
 python main.py
