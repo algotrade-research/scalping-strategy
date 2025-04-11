@@ -88,6 +88,29 @@ More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products
 - Data is sourced from reliable financial providers and stored as CSV format in data folder.
 
 ## Installation
+**Create environment:**
+```
+python -m venv myenv
+```
+
+**Activate environment:**
+- Windows (CMD):
+```
+myenv\Scripts\activate.bat
+```
+- Windows (PowerShell):
+```
+myenv\Scripts\activate.ps1
+```
+- macOS / Linux:
+```
+source myenv/bin/activate
+```
+After activation, your terminal prompt should change to indicate you're in a virtual environment, for example:
+```
+(myenv) user@computer:~$
+```
+
 **Clone the Repository:**
 ```
 git clone https://github.com/algotrade-research/scalping-strategy.git
