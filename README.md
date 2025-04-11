@@ -88,6 +88,10 @@ More detail of SSI API can be found [here](https://guide.ssi.com.vn/ssi-products
 - Data is sourced from reliable financial providers and stored as CSV format in data folder.
 
 ## Installation
+**Clone the Repository:**
+```
+git clone https://github.com/algotrade-research/scalping-strategy.git
+```
 
 - Requirement: pip
 - Install the dependencies by:
@@ -103,10 +107,7 @@ pip install ssi-fc-data
 # Implementation
 Tick based data is really noise and hard to develop the larger take profit strategy so I convert to 1 minute candle data for less noise and enhance more technical analysis.
 ## Environment Setup and Replication Steps
-1. **Clone the Repository:**
- ```
-git clone https://github.com/algotrade-research/scalping-strategy.git
-```
+
 # In-sample Backtesting
 
 The data from 01/01/2023 to 31/12/2023 
