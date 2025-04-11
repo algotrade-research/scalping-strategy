@@ -133,7 +133,7 @@ python main.py
 
 Run the optimization process by
 ```
-python optimization.py
+python optimize.py
 ```
 ## Optimization Process / Methods / Library
 - **Library:** [Optuna](https://optuna.org/)
