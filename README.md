@@ -1,3 +1,4 @@
+![Static Badge](https://img.shields.io/badge/PLUTUS-65%25-%23BA8E23)
 
 # Abstract
 The core hypothesis of this strategy is that combining technical indicators (ATR, RSI, SMA) and momentum signal in VN30F1M data and VN30 data (since VN30 and VN30F1M is highly correlated) with dynamic position sizing can produce consistent, profitable trading signals. By scaling into positions based on volatility and signal strength, and applying robust risk controls (stop-losses, take-profits, partial exits, and trailing stops), the strategy aims to capture market opportunities while limiting downside risk.
