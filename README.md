@@ -123,7 +123,7 @@ pip install -r requirements.txt
 ```
 - Install ssi fast connect
 ```
-cd data/fc-data.py
+cd data/fc-data
 pip install ssi-fc-data
 ```
 
