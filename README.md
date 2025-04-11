@@ -143,7 +143,7 @@ The data from 01/01/2023 to 31/12/2023
 ## In-sample Backtesting Result
 The in-sample backtesting results are summarized in a performance table and visualized with a cumulative PNL chart.  
 
-To see the results, run this command with the ```main.py``` file
+To see the results, run this command with the ```main.py``` file and choose option ```in``` in the terminal
 ```
 python main.py
 ```
@@ -223,7 +223,7 @@ The best parameters is stored in ```optimization/best_params.json``` file
 | Total Long Trades     |    1840        |
 | Total Short Trades    |  1455          |
 
-To see the results, run this command with the ```main.py``` file
+To see the results, run this command with the ```main.py``` file and choose option ```out``` in the terminal
 ```
 python main.py
 ```
